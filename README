@@ -1,0 +1,58 @@
+Mathpcha
+========
+
+Plugin for Rails 3 that provides a simple anti-spambot verification for forms.
+Mathpcha uses simple math for CAPTCHA-like verification.
+
+How it works
+============
+
+The verification mechanism is supposed to tell humans and machines apart.
+As graphics- or sound-based CAPTCHAs are discouraged due to their poor accessibility, we offer text-based mathematical solution.
+The user is shown a simple question of "How much is foo plus/minus bar?" and asked to enter a number (not a word) that corresponds to the result.
+Such approach is along the lines of W3C recommendations.
+
+The addition/subtraction is randomly chosen, as are the numbers. The result is always a non-negative number.
+The numbers are either displayed in their numerical form (e.g. 13) or as text (e.g. thirteen), decided randomly.
+
+Usage
+=====
+
+Two things are required: a code to place in the view and a code that verifies submitted data.
+
+The HTML code to put inside a form is given by a method:
+  UnforgivenPL::Mathpcha::Captcha.new.html
+(remember to call .html_safe!)
+It will be translated into two labels and a text field.
+  
+The controller code that checks the above in action that the form is submitted to:
+  UnforgivenPL::Mathpcha::Captcha.valid?(params)
+
+Localisation
+============
+
+In order for Mathpcha to work properly your locale files must contain the following:
+
+ unforgivenpl:
+   mathpcha:
+     numbers:      ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"]
+     plus:         "How much is %{num1} plus %{num2}?"
+     minus:        "How much is %{num1} minus %{num2}?"
+     remark:       "(enter number)"
+
+Customisation
+=============
+
+The constructor of Captcha can have an optional parameter that defines the range, from which numbers are randomly generated. By default this is 20. Update your locale files whenever using bigger range.
+The .html method accepts optional prefix that is added to the result and verify fields. There should be no need for you to specify it, unless you really want to have full control over the form names.
+
+The Captcha.valid? method takes three parameters, two of which are optional.
+The first parameter can be a params array or a value of the result field.
+The second field should be nil in case params array was passed, or a value of the verification field.
+The final argument should contain the prefix for the html fields, in case the params array was given as first argument. In other case it should be nil.
+
+Credits
+=======
+
+Written and released by Unforgiven.pl.
+Copyright (c) 2011 Unforgiven.pl, released under the MIT license
